@@ -4,7 +4,19 @@ Sample code using the components and the compojure-api library
 
 ## Usage
 
-FIXME
+From the checkout location type
+
+{% codeblock %}
+lein run
+{% endcodeblock %}
+
+to bring up the http end point. You can then run
+
+{% codeblock %}
+curl -XGET http://localhost:8080/echo/world
+{% endcodeblock %}
+
+to verify the server is running
 
 ## License
 
