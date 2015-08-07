@@ -1,4 +1,4 @@
-(ns components.system
+(ns components.systems
   (:require [com.stuartsierra.component :as component]
             [components.aleph :as aleph]
             [components.mongo :as mongo]))
