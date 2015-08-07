@@ -4,9 +4,20 @@
             [components.handler :as h]
             [components.systems :as systems]))
 
-(defn -main [& args]
-  (component/start 
-   (systems/prod-system {:host "localhost" 
-                        :mongo-port 27017 
+(def system 
+  (systems/prod-system {:host "localhost" 
+                        :mongo-port 27017
+                        :database "b2b"
+                        :options {:connections-per-host 30}
                         :port 8080 
-                        :handler h/handler})))
+                        :handler h/handler}))
+
+(defn start []
+  (component/start system))
+
+(defn shutdown []
+  (component/stop system))
+
+(defn -main [& args]
+  (.addShutdownHook (Runtime/getRuntime) (Thread. shutdown))
+  (start))

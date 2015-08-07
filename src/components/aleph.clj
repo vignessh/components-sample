@@ -3,22 +3,21 @@
             [com.stuartsierra.component :as component]
             [compojure.api.middleware :as mw]))
 
-(defrecord AlephWebServer [port handler]
+(defrecord AlephWebServer [port handler aleph]
   component/Lifecycle
   
   (start [this]
     (println ";; Starting Aleph HTTP server")
-    (println this)
-    (if-let [aleph (:aleph this)]
-      (aleph))
-    (assoc this :aleph (http/start-server (mw/wrap-components handler this) {:port port})))
+    (if aleph
+      this
+      (assoc this :aleph (http/start-server (mw/wrap-components handler this) {:port port}))))
 
   (stop [this]
     (println ";; Stopping Aleph HTTP server")
-    (println this)
-    (if-let [aleph (:aleph this)]
-      (aleph))
-    (dissoc this :aleph)))
+    (if (not aleph)
+      this
+      (do (.close aleph) 
+          (dissoc this :aleph)))))
 
 (defn new-aleph-server [{:keys [port handler]}]
   (map->AlephWebServer {:port port :handler handler}))
