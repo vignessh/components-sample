@@ -1,11 +1,16 @@
 (ns components.routes
   (:require [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [ring.swagger.ui :as swagger]))
 
 (defapi api-routes
-   (ring.swagger.ui/swagger-ui)
-   (swagger-docs)
+   (swagger/swagger-ui)
+   (swagger-docs {:info 
+                  {:version "1.0.0"
+                   :title "API endpoints"
+                   :contact {:email "contact@me.com"}}
+                  :tags [{:name "example" :description "Sample use of Compojure API and the Components library"}]})
    (context* "/echo" []
              :tags ["echo"]
              :components [mongo]
@@ -13,7 +18,7 @@
                    :return String
                    :path-params [name :- String]
                    :summary "Echoes the given name"
-                   (ok (str "Hello, " name mongo))))
+                   (ok (str "Hello, " name))))
 
   (context* "/:tenant-id/document" [tenant-id]
             :tags ["document"]
