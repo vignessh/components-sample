@@ -2,7 +2,14 @@
   (:require [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]
-            [ring.swagger.ui :as swagger]))
+            [ring.swagger.ui :as swagger]
+            [components.services :as services]
+            [components.document :as d]))
+
+(s/defschema User {:name s/Str
+                   :sex (s/enum :male :female)
+                   :address {:street s/Str
+                             :zip s/Str}})
 
 (defapi api-routes
    (swagger/swagger-ui)
@@ -18,7 +25,16 @@
                    :return String
                    :path-params [name :- String]
                    :summary "Echoes the given name"
-                   (ok (str "Hello, " name))))
+                   (ok (str "Hello, " name)))
+             (PUT* "/anonymous" []
+                   :return   [{:hot Boolean}]
+                   :body     [body [{:hot (s/either Boolean String)}]]
+                   :summary  "echoes a vector of anonymous hotties"
+                   (ok body))
+             (POST* "/" []
+                    :return User
+                    :body [user User]
+                    (ok user)))
 
   (context* "/:tenant-id/document" [tenant-id]
             :tags ["document"]
@@ -27,11 +43,13 @@
             :components [mongo]
             (GET* "/:id" [id :as request]
                   :path-params [id :- String]
+                  :return d/Document
                   :summary "Returns the document identified by the given identifier"
-                  (ok {:createdBy username :creatorShortName shortname :tenant-id tenant-id}))
-            (POST* "/" [:as request]
+                  (println (:headers request))
+                  (ok (services/find-by-id mongo tenant-id id username)))
+            (POST* "/" []
+                   :body [document d/Document]
+                   :return d/Document
                    :summary "Attach given metadata alongwith uploaded document"
-                   (let [content (request :body)
-                         meta (merge (content :metadata) {:createdBy username :creatorShortName shortname})
-                         document (assoc content :metadata meta)]
-                     (ok document)))))
+                   (prn document)
+                   (ok document))))
