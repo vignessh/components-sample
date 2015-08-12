@@ -5,10 +5,10 @@
             [components.systems :as systems]))
 
 (def system 
-  (systems/prod-system {:host "localhost" 
+  (systems/dev-system {:host "localhost" 
                         :mongo-port 27017
                         :database "b2b"
-                        :options {:connections-per-host 30}
+                        :options {:connections-per-host 10}
                         :port 8080 
                         :handler h/handler}))
 

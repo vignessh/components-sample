@@ -1,6 +1,6 @@
 (ns components.handler
-  (:require [components.middleware :as mw]
-            [components.routes :as routes]))
+  (:require [components.routes :as routes]
+            [compojure.api.middleware :as mw]))
 
-(def handler routes/api-routes)
-(def handler2 (mw/make-handler routes/api-routes))
+(defn handler [components]
+  (mw/wrap-components routes/api-routes components))

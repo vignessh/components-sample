@@ -23,7 +23,7 @@
                  ;[org.danielsz/system "0.1.8"]
                  [environ "1.0.0"]]
   :min-lein-version "2.3.3"
-  :jvm-opts ^:replace ["-server" "-Xmx2g"]  
+  :jvm-opts ^:replace ["-server" "-Xmx4g"]  
   :main components.core
   :plugins [[lein-environ "1.0.0"]]
   ;:ring {:handler content-store.document-handler/app :port 8080}

@@ -1,7 +1,6 @@
 (ns components.http-kit
   (:require [com.stuartsierra.component :as component]
-            [org.httpkit.server :as http-kit]
-            [compojure.api.middleware :as mw]))
+            [org.httpkit.server :as http-kit]))
 
 (defrecord HttpServer [port handler http-kit]
   component/Lifecycle
@@ -10,7 +9,7 @@
     (println ";; Starting Httpkit server")
     (if http-kit
       this
-      (assoc this :http-kit (http-kit/run-server (mw/wrap-components handler this) {:port port}))))
+      (assoc this :http-kit (http-kit/run-server (handler this) {:port port}))))
 
   (stop [this]
     (println ";; Stopping Httpkit server")

@@ -45,7 +45,7 @@
                   :path-params [id :- String]
                   :return d/Document
                   :summary "Returns the document identified by the given identifier"
-                  (println (:headers request))
+                  ;(println (:headers request))
                   (ok (services/find-by-id mongo tenant-id id username)))
             (POST* "/" []
                    :body [document d/Document]

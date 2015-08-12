@@ -1,7 +1,6 @@
 (ns components.aleph
   (:require [aleph.http :as http]
-            [com.stuartsierra.component :as component]
-            [compojure.api.middleware :as mw]))
+            [com.stuartsierra.component :as component]))
 
 (defrecord AlephWebServer [port handler aleph]
   component/Lifecycle
@@ -10,7 +9,7 @@
     (println ";; Starting Aleph HTTP server")
     (if aleph
       this
-      (assoc this :aleph (http/start-server (mw/wrap-components handler this) {:port port}))))
+      (assoc this :aleph (http/start-server (handler this) {:port port}))))
 
   (stop [this]
     (println ";; Stopping Aleph HTTP server")
