@@ -34,6 +34,7 @@
              (POST* "/" []
                     :return User
                     :body [user User]
+                    (prn user)
                     (ok user)))
 
   (context* "/:tenant-id/document" [tenant-id]
@@ -51,5 +52,5 @@
                    :body [document d/Document]
                    :return d/Document
                    :summary "Attach given metadata alongwith uploaded document"
-                   (prn document)
-                   (ok document))))
+                   (let [meta (merge (document :metadata) {:createdBy username :creatorShortName shortname})]
+                     (ok (services/store mongo tenant-id (assoc document :metadata meta)))))))
