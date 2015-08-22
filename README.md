@@ -1,4 +1,4 @@
-# components
+# components-example
 
 Sample code using the components and the compojure-api library
 
